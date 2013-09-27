@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Repaint</title>
+	
+	<style>p {position: relative;
+
+}
+	
+	.sliding {
+		-webkit-transition: left 2s;
+		transition: left 2s;
+		left: 1000px;
+	}
+	
+	.translating {
+		-webkit-transition: -webkit-transform 2s;
+		-webkit-transform: translatez(0) translatex(1000px);
+		transition: transform 2s;
+		transform: translatex(1000px);
+	}
+	
+	.translating3D {
+		-webkit-transition: -webkit-transform 2s;
+		-webkit-transform: translate3d(1000px, 0, 0);
+		transition: transform 2s;
+		transform: translate3d(1000px, 0, 0);
+	}
+	
+	</style>
+	<script>
+	
+	//spectacularly quick and dirty test code for comparing reflow/repaint impact of 
+	//animating the same effect, sliding an element to the right, using 3 different techniques
+	 
+	 //1. changing the left value with JS
+	 //2. changingthe left value via CSS, and using a CSS transition to animate
+	 //3. using translateX transform, and animating this by a transition
+	 
+	 
+	var left = 0;
+	var intv
+	
+	function slideJS () {
+	
+		if (intv) {
+			window.clearInterval(intv)
+		}
+	
+		left = 0
+		intv = window.setInterval(moveItWithJS, 5)
+	}
+
+	function slideWithCSSLeft () {
+	
+		if (intv) {
+			window.clearInterval(intv)
+		}
+	
+		moveItWithCSSLeft()
+	}
+
+	function slideWithCSSTranslate () {
+	
+		if (intv) {
+			window.clearInterval(intv)
+		}
+		
+		moveItWithCSSTranslate()
+	
+
+	}
+	
+
+	function slideWithCSSTranslate3D () {
+	
+		if (intv) {
+			window.clearInterval(intv)
+		}
+		
+		moveItWithCSSTranslate3D()
+	
+
+	}
+	
+	function moveItWithJS() {
+		left += 10;
+		document.querySelector("p").style.left = left + "px";
+		
+		if (left > 1000) {
+			window.clearInterval(intv)
+		}
+	}
+	
+	function moveItWithCSSLeft() {
+		document.querySelector("p").classList.toggle('sliding');
+		
+	}
+	
+	
+	function moveItWithCSSTranslate() {
+		document.querySelector("p").classList.toggle('translating');		
+	}
+	
+	function moveItWithCSSTranslate3D() {
+		document.querySelector("p").classList.toggle('translating3D');		
+	}
+	
+	</script>
+</head>
+<body>
+<p>This is going to move you</p>
+<p><button onclick="slideJS()">slide With JS</button> <button onclick="slideWithCSSLeft()">slide Animating Left with CSS</button> <button onclick="slideWithCSSTranslate()">slide Animating with CSS and Translate</button>  <button onclick="slideWithCSSTranslate3D()">slide Animating with CSS and Translate3D</button></p>
+
+<p>Use the dev tools in your favourite browser to determine how many repaint/reflow events the browser uses for each.</p>
+</body>
+</html>
